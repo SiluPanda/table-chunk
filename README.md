@@ -3,6 +3,7 @@
 Format-aware table extraction and chunking for RAG pipelines. Parses tables from Markdown, HTML, and CSV/TSV, then produces embedding-optimized chunks where every chunk carries its column headers.
 
 [![npm version](https://img.shields.io/npm/v/table-chunk.svg)](https://www.npmjs.com/package/table-chunk)
+[![npm downloads](https://img.shields.io/npm/dt/table-chunk.svg)](https://www.npmjs.com/package/table-chunk)
 [![license](https://img.shields.io/npm/l/table-chunk.svg)](https://github.com/SiluPanda/table-chunk/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/table-chunk.svg)](https://nodejs.org/)
 
