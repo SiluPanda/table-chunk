@@ -191,4 +191,39 @@ describe('HTML table parser', () => {
     const table = parseTable(input, 'html');
     expect(table.rows[0][0]).toBe('First Last');
   });
+
+  it('correctly slices data rows after single header row', () => {
+    const input = `<table>
+      <thead>
+        <tr><th>A</th><th>B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>2</td></tr>
+        <tr><td>3</td><td>4</td></tr>
+      </tbody>
+    </table>`;
+
+    const table = parseTable(input, 'html');
+    expect(table.headers).toEqual(['A', 'B']);
+    expect(table.rows).toHaveLength(2);
+    expect(table.rows[0]).toEqual(['1', '2']);
+    expect(table.rows[1]).toEqual(['3', '4']);
+  });
+
+  it('correctly slices data rows after multi-level headers', () => {
+    const input = `<table>
+      <thead>
+        <tr><th>Group</th><th>Group</th></tr>
+        <tr><th>Sub A</th><th>Sub B</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>2</td></tr>
+      </tbody>
+    </table>`;
+
+    const table = parseTable(input, 'html');
+    // Multi-level headers should be flattened and data rows should not include header rows
+    expect(table.rows).toHaveLength(1);
+    expect(table.rows[0]).toEqual(['1', '2']);
+  });
 });

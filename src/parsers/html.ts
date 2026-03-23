@@ -226,12 +226,13 @@ export function parseHtmlTable(input: string, preserveCellHtml = false): Table {
     }
   } else if (headerRowIndices.length === 1) {
     headers = grid[headerRowIndices[0]] as string[];
-    dataRows = grid.slice(headerRowIndices.length) as string[][];
+    dataRows = grid.slice(headerRowIndices[0] + 1) as string[][];
   } else {
     // Multi-level headers: flatten
     originalHeaderLevels = headerRowIndices.map(r => grid[r] as string[]);
     headers = flattenMultiLevelHeaders(originalHeaderLevels);
-    dataRows = grid.slice(headerRowIndices.length) as string[][];
+    const lastHeaderRow = headerRowIndices[headerRowIndices.length - 1];
+    dataRows = grid.slice(lastHeaderRow + 1) as string[][];
   }
 
   const metadata: TableMetadata = {
