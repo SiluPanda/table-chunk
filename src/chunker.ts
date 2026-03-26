@@ -221,8 +221,9 @@ function chunkColumnBased(
 
   const groups: number[][] = [];
   const effectivePerChunk = Math.max(1, columnsPerChunk - anchorColumns.length);
+  const safeOverlap = Math.min(columnOverlap, effectivePerChunk - 1);
 
-  for (let i = 0; i < nonAnchorCols.length; i += effectivePerChunk - (i === 0 ? 0 : columnOverlap)) {
+  for (let i = 0; i < nonAnchorCols.length; i += effectivePerChunk - (i === 0 ? 0 : safeOverlap)) {
     const groupCols = nonAnchorCols.slice(i, i + effectivePerChunk);
     if (groupCols.length === 0) break;
     // Combine anchor columns with group columns
