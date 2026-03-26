@@ -274,6 +274,40 @@ describe('Column-based chunking', () => {
       expect(chunk.text).toContain('Bob');
     }
   });
+
+  it('does not infinite loop when columnOverlap >= effectivePerChunk', () => {
+    // columnsPerChunk=3, anchorColumns=[0] => effectivePerChunk=2
+    // columnOverlap=2 => without clamping, step = 2-2 = 0 (infinite loop)
+    const chunks = chunkTable(wideTable, {
+      strategy: 'column-based',
+      columnsPerChunk: 3,
+      anchorColumns: [0],
+      columnOverlap: 2,
+    });
+    expect(chunks.length).toBeGreaterThan(0);
+    // Every chunk must include the anchor column
+    for (const ch of chunks) {
+      expect(ch.text).toContain('Name');
+    }
+    // All non-anchor columns must be covered
+    const allHeaders = chunks.flatMap(ch => ch.metadata.headers);
+    expect(allHeaders).toContain('A');
+    expect(allHeaders).toContain('H');
+  });
+
+  it('does not infinite loop when columnOverlap exceeds columnsPerChunk', () => {
+    // columnOverlap=10 far exceeds effectivePerChunk; must still terminate
+    const chunks = chunkTable(wideTable, {
+      strategy: 'column-based',
+      columnsPerChunk: 3,
+      anchorColumns: [0],
+      columnOverlap: 10,
+    });
+    expect(chunks.length).toBeGreaterThan(0);
+    for (const ch of chunks) {
+      expect(ch.text).toContain('Name');
+    }
+  });
 });
 
 describe('Cell-level chunking', () => {
